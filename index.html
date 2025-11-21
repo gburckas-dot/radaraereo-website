@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>El Radar Aéreo – Edición dinámica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="El Radar Aéreo: noticias, contexto y mercado para la industria de la aviación." />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      background: #020617;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+    .top-bar {
+      background: #020617;
+      border-bottom: 1px solid #111827;
+      padding: 8px 0;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .top-bar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,0.9);
+    }
+    .top-bar-label {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.7rem;
+      color: #f97316;
+      font-weight: 600;
+    }
+    .top-bar-right { font-size: 0.78rem; }
+
+    header {
+      background: #020617;
+      border-bottom: 1px solid #111827;
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo-block { display: flex; align-items: center; gap: 16px; }
+    .logo-mark {
+      width: 64px; height: 64px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.95);
+      border: 1px solid #f97316;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; letter-spacing: 0.06em;
+    }
+    .logo-text-main {
+      font-weight: 900;
+      font-size: 1.45rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #f9fafb;
+    }
+    .logo-text-sub {
+      font-size: 0.84rem;
+      color: #cbd5f5;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+    nav a {
+      color: #9ca3af;
+      padding: 6px 0;
+      border-bottom: 2px solid transparent;
+    }
+    nav a:hover { color: #e5e7eb; border-bottom-color: #f97316; }
+    .nav-cta {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #f97316;
+      color: #f97316;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .nav-cta:hover { background: #f97316; color: #020617; }
+
+    main { margin-top: 16px; }
+    .layout-main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 18px;
+    }
+    .hero-card {
+      background: linear-gradient(135deg, #0f172a, #020617);
+      border-radius: 18px;
+      border: 1px solid #1e293b;
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #f97316;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    .hero-title {
+      font-size: 1.6rem;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+    .hero-meta {
+      font-size: 0.76rem;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    .hero-summary {
+      font-size: 0.96rem;
+      color: #d1d5db;
+      margin-bottom: 10px;
+      max-width: 640px;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 0.75rem;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid #1f2937;
+      color: #e5e7eb;
+    }
+    .hero-why {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      background: rgba(15,23,42,0.85);
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid #1f2937;
+    }
+    .hero-why strong { color: #facc15; }
+
+    .side-column { display: grid; gap: 14px; }
+    .side-block {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #111827;
+      padding: 12px 12px 10px;
+    }
+    .side-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+      margin-bottom: 6px;
+    }
+    .side-list { display: grid; gap: 8px; }
+    .side-item-title { font-size: 0.9rem; font-weight: 600; }
+    .side-item-text { font-size: 0.8rem; color: #9ca3af; }
+
+    .section-strip { margin-top: 24px; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+    .section-title span { color: #f97316; }
+    .section-sub { font-size: 0.8rem; color: #9ca3af; }
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .mini-card {
+      background: #020617;
+      border-radius: 12px;
+      border: 1px solid #111827;
+      padding: 10px 10px 11px;
+      font-size: 0.82rem;
+    }
+    .mini-card-title { font-weight: 600; margin-bottom: 3px; }
+    .mini-card-text { font-size: 0.78rem; color: #9ca3af; }
+
+    .full-width-card {
+      margin-top: 22px;
+      background: #020617;
+      border-radius: 16px;
+      border: 1px solid #111827;
+      padding: 14px 14px 16px;
+    }
+    .full-width-card small {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #9ca3af;
+    }
+    .full-width-card h3 {
+      font-size: 1.1rem;
+      margin-top: 4px;
+      margin-bottom: 6px;
+    }
+    .full-width-card p {
+      font-size: 0.9rem;
+      color: #d1d5db;
+    }
+    footer {
+      border-top: 1px solid #111827;
+      margin-top: 26px;
+      padding-top: 14px;
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    #status {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    
+    .logo-mark img { display:block; width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 960px) {
+      .layout-main { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      nav { flex-wrap: wrap; gap: 10px; }
+      .cards-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .cards-row { grid-template-columns: minmax(0, 1fr); }
+      .hero-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div class="top-bar-left">
+        <div class="live-dot"></div>
+        <div>
+          <div class="top-bar-label">Ahora en el aire</div>
+          <div id="top_bar_text" style="font-size: 0.8rem; color:#e5e7eb;">
+            Cargando edición...
+          </div>
+        </div>
+      </div>
+      <div class="top-bar-right" id="top_bar_date">
+        <!-- Se rellena con la fecha desde el Sheet -->
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-block">
+    <div class="logo-mark">
+        <img src="logo.png" alt="Radar Aéreo" style="height:48px; width:auto;">
+    </div>
+    <div>	
+          <div class="logo-text-main">El Radar Aéreo</div>
+          <div class="logo-text-sub">Noticias & contexto para la industria</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#inicio">Inicio</a>
+        <a href="#secciones">Secciones</a>
+        <a href="#ediciones">Ediciones</a>
+        <a href="#contacto">Contacto</a>
+        <a href="#suscripcion" class="nav-cta">Suscribirse</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <main id="inicio">
+      <div class="layout-main">
+        <section class="hero-card">
+          <div class="hero-tag" id="hero_tag">Nota de tapa</div>
+          <h1 class="hero-title" id="hero_titulo">
+            Cargando título...
+          </h1>
+          <div class="hero-meta" id="hero_meta">
+            <!-- autor / categoría -->
+          </div>
+          <p class="hero-summary" id="hero_bajada">
+            <!-- resumen -->
+          </p>
+          <div class="hero-pills" id="hero_pills">
+            <!-- se rellenan los chips desde el Sheet -->
+          </div>
+          <div class="hero-why" id="hero_por_que">
+            <!-- por qué importa -->
+          </div>
+          <div id="status"></div>
+        </section>
+
+        <aside class="side-column">
+          <div class="side-block">
+            <div class="side-title">Último momento</div>
+            <div class="side-list">
+              <article>
+                <div class="side-item-title" id="ultimo_titulo"></div>
+                <div class="side-item-text" id="ultimo_texto"></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="side-block">
+            <div class="side-title">Acciones en el radar</div>
+            <div class="side-list">
+              <article>
+                <div class="side-item-title" id="acciones_titulo"></div>
+                <div class="side-item-text" id="acciones_texto"></div>
+              </article>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="section-strip" id="secciones">
+        <div class="section-header">
+          <h2 class="section-title"><span>Argentina</span> · mercado local</h2>
+          <p class="section-sub">Movimientos clave en aerolíneas, regulación y operaciones.</p>
+        </div>
+        <div class="cards-row">
+          <article class="mini-card">
+            <div class="mini-card-title" id="ar1_titulo"></div>
+            <div class="mini-card-text" id="ar1_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="ar2_titulo"></div>
+            <div class="mini-card-text" id="ar2_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="ar3_titulo"></div>
+            <div class="mini-card-text" id="ar3_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="ar4_titulo"></div>
+            <div class="mini-card-text" id="ar4_texto"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-strip">
+        <div class="section-header">
+          <h2 class="section-title"><span>Latinoamérica</span> · región</h2>
+          <p class="section-sub">Conectividad, flotas y estrategias en el entorno regional.</p>
+        </div>
+        <div class="cards-row">
+          <article class="mini-card">
+            <div class="mini-card-title" id="la1_titulo"></div>
+            <div class="mini-card-text" id="la1_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="la2_titulo"></div>
+            <div class="mini-card-text" id="la2_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="la3_titulo"></div>
+            <div class="mini-card-text" id="la3_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="la4_titulo"></div>
+            <div class="mini-card-text" id="la4_texto"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-strip">
+        <div class="section-header">
+          <h2 class="section-title"><span>Mundo</span> · regulación & seguridad</h2>
+          <p class="section-sub">Decisiones de OACI, FAA y operadores que marcan la agenda global.</p>
+        </div>
+        <div class="cards-row">
+          <article class="mini-card">
+            <div class="mini-card-title" id="mu1_titulo"></div>
+            <div class="mini-card-text" id="mu1_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="mu2_titulo"></div>
+            <div class="mini-card-text" id="mu2_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="mu3_titulo"></div>
+            <div class="mini-card-text" id="mu3_texto"></div>
+          </article>
+          <article class="mini-card">
+            <div class="mini-card-title" id="mu4_titulo"></div>
+            <div class="mini-card-text" id="mu4_texto"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="full-width-card" id="ediciones">
+        <small>Fuera del radar</small>
+        <h3 id="fuera_titulo"></h3>
+        <p id="fuera_texto"></p>
+      </section>
+    </main>
+
+    <footer id="contacto">
+      Versión dinámica de El Radar Aéreo. El contenido se edita desde una planilla de Google Sheets.
+      <br />Actualizá la planilla y recargá esta página para ver la nueva edición.
+    </footer>
+  </div>
+
+  <script>
+    // 1) CAMBIÁ ESTA URL cuando tengas listo tu Google Apps Script
+    const DATA_URL = "https://script.google.com/macros/s/AKfycbw3vrnL_I4KfoHWKG-1g63ngdXkcBeF8nKJKuIsFywNTWmQpkkgmPHWnrzUNKosBeWqsg/exec";
+
+function formatearFecha(isoString) {
+  if (!isoString) return "";
+  const meses = [
+    "enero","febrero","marzo","abril","mayo","junio",
+    "julio","agosto","septiembre","octubre","noviembre","diciembre"
+  ];
+  const fecha = new Date(isoString);
+  const dia = fecha.getUTCDate();
+  const mes = meses[fecha.getUTCMonth()];
+  const año = fecha.getUTCFullYear();
+  return `${dia} de ${mes} de ${año}`;
+}
+
+
+    const statusEl = document.getElementById("status");
+
+    async function cargarContenido() {
+      try {
+        statusEl.textContent = "Cargando datos desde la planilla...";
+
+        const resp = await fetch(DATA_URL);
+        if (!resp.ok) throw new Error("No se pudo obtener el JSON");
+
+        const rows = await resp.json();
+        if (!rows || !rows.length) throw new Error("La planilla está vacía");
+
+        const d = rows[0]; // Usamos la primera fila
+
+        // Top bar
+        document.getElementById("top_bar_text").textContent = d.top_bar_texto || "";
+        document.getElementById("top_bar_date").textContent = formatearFecha(d.fecha);
+
+
+        // Hero / nota de tapa
+        document.getElementById("hero_tag").textContent = d.hero_tag || "Nota de tapa";
+        document.getElementById("hero_titulo").textContent = d.hero_titulo || "";
+        document.getElementById("hero_meta").textContent = d.hero_meta || "";
+        document.getElementById("hero_bajada").textContent = d.hero_bajada || "";
+        document.getElementById("hero_por_que").textContent = d.hero_por_que || "";
+
+        // Pills: separadas por punto y coma en una sola celda
+        const pillsStr = d.hero_pills || "";
+        const pills = pillsStr.split(";").map(t => t.trim()).filter(Boolean);
+        const pillsContainer = document.getElementById("hero_pills");
+        pillsContainer.innerHTML = "";
+        pills.forEach(p => {
+          const span = document.createElement("span");
+          span.className = "pill";
+          span.textContent = p;
+          pillsContainer.appendChild(span);
+        });
+
+        // Último momento y acciones
+        document.getElementById("ultimo_titulo").textContent = d.ultimo_titulo || "";
+        document.getElementById("ultimo_texto").textContent = d.ultimo_texto || "";
+        document.getElementById("acciones_titulo").textContent = d.acciones_titulo || "";
+        document.getElementById("acciones_texto").textContent = d.acciones_texto || "";
+
+        // Argentina
+        document.getElementById("ar1_titulo").textContent = d.ar1_titulo || "";
+        document.getElementById("ar1_texto").textContent = d.ar1_texto || "";
+        document.getElementById("ar2_titulo").textContent = d.ar2_titulo || "";
+        document.getElementById("ar2_texto").textContent = d.ar2_texto || "";
+        document.getElementById("ar3_titulo").textContent = d.ar3_titulo || "";
+        document.getElementById("ar3_texto").textContent = d.ar3_texto || "";
+        document.getElementById("ar4_titulo").textContent = d.ar4_titulo || "";
+        document.getElementById("ar4_texto").textContent = d.ar4_texto || "";
+
+        // LatAm
+        document.getElementById("la1_titulo").textContent = d.la1_titulo || "";
+        document.getElementById("la1_texto").textContent = d.la1_texto || "";
+        document.getElementById("la2_titulo").textContent = d.la2_titulo || "";
+        document.getElementById("la2_texto").textContent = d.la2_texto || "";
+        document.getElementById("la3_titulo").textContent = d.la3_titulo || "";
+        document.getElementById("la3_texto").textContent = d.la3_texto || "";
+        document.getElementById("la4_titulo").textContent = d.la4_titulo || "";
+        document.getElementById("la4_texto").textContent = d.la4_texto || "";
+
+        // Mundo
+        document.getElementById("mu1_titulo").textContent = d.mu1_titulo || "";
+        document.getElementById("mu1_texto").textContent = d.mu1_texto || "";
+        document.getElementById("mu2_titulo").textContent = d.mu2_titulo || "";
+        document.getElementById("mu2_texto").textContent = d.mu2_texto || "";
+        document.getElementById("mu3_titulo").textContent = d.mu3_titulo || "";
+        document.getElementById("mu3_texto").textContent = d.mu3_texto || "";
+        document.getElementById("mu4_titulo").textContent = d.mu4_titulo || "";
+        document.getElementById("mu4_texto").textContent = d.mu4_texto || "";
+
+        // Fuera del radar
+        document.getElementById("fuera_titulo").textContent = d.fuera_titulo || "";
+        document.getElementById("fuera_texto").textContent = d.fuera_texto || "";
+
+        statusEl.textContent = "Contenido cargado desde la planilla ✔";
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "No se pudo cargar la planilla. Mostrando texto vacío.";
+      }
+    }
+
+    cargarContenido();
+  </script>
+</body>
+</html>
