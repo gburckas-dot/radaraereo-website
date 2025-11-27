@@ -562,20 +562,21 @@ function formatearFecha(isoString) {
       }
     }
 
-    cargarContenido();
-<script>
-  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfcR1YjUweEiKiZ3B-_GkJze55tDv6G4HkO6UcfNltJafb0zk4cDu0ogEvzPXE0ktjTBKCG-kdDMuH/pub?gid=0&single=true&output=csv";
+cargarContenido();
+  </script>
 
-  fetch(SHEET_CSV_URL)
-    .then(res => res.text())
-    .then(texto => {
-      console.log("✅ Datos recibidos desde Google Sheets:");
-      console.log(texto);
-    })
-    .catch(err => {
-      console.error("❌ Error al leer el Sheets:", err);
-    });
-</script>
+  <script>
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQfcR1YjUweEiKiZ3B-_GkJze55tDv6G4HkO6UcfNltJafb0zk4cDu0ogEvzPXE0ktjTBKCG-kdDMuH/pub?gid=0&single=true&output=csv";
+
+    fetch(SHEET_CSV_URL)
+      .then(res => res.text())
+      .then(texto => {
+        console.log("✅ Datos recibidos desde Google Sheets:");
+        console.log(texto);
+      })
+      .catch(err => {
+        console.error("❌ Error al leer el Sheets:", err);
+      });
   </script>
 </body>
 </html>
